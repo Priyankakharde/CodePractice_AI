@@ -1,4 +1,5 @@
 from pathlib import Path
+from turtle import right
 import streamlit as st
 
 # ============================================================
@@ -909,328 +910,304 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 # ============================================================
 
 def render_dashboard():
-    # TOP BAR
+    # ========================================================
+    # WELCOME
+    # ========================================================
     st.markdown("""
-    <div class="topbar">
-        <div class="search-box">
-            <div class="search-left">🔍 &nbsp; Search topics, e.g. loops, joins, group by ...</div>
-            <div class="search-shortcut">Ctrl + K</div>
+        <div class="hero-row">
+            <div><div class="hero-title">Welcome back, Priyanka! 👋</div><div class="hero-subtitle">Continue learning and practice to build your skills.</div></div>
+            <div class="hero-quote">“Code. Practice. Improve.”</div>
         </div>
-        <div class="top-spacer"></div>
-        <div class="notification">🔔<div class="notification-dot"></div></div>
-        <div class="profile">
-            <div class="avatar">P</div>
-            <div><div class="profile-name">Priyanka Kharde</div><div class="profile-sub">Keep Learning ✨</div></div>
-            <div class="profile-arrow">⌄</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # HERO
-    st.markdown("""
-    <div class="hero-row">
-        <div><div class="hero-title">Welcome back, Priyanka! 👋</div><div class="hero-subtitle">Continue learning and practice to build your skills.</div></div>
-        <div class="hero-quote">“Code. Practice. Improve.”</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    left, right = st.columns([3.2, 1], gap="medium")
-
-    with left:
-        # SUBJECT CARDS
-        py_col, sql_col = st.columns(2, gap="small")
-        with py_col:
-            st.markdown("""
-            <div class="subject-card python-card"><div class="wave"></div><div class="subject-content">
-                <div class="subject-icon">🐍</div><div class="subject-title">Python</div>
-                <div class="subject-text">Learn Python from basics to advanced<br>with examples and hands-on practice.</div>
-                <div class="subject-arrow">→</div>
-            </div></div>
-            """, unsafe_allow_html=True)
-            st.markdown('<div class="subject-button subject-blue">', unsafe_allow_html=True)
-            if st.button("Start Learning →", key="start_python", use_container_width=True):
-                st.switch_page("python_learning.py")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with sql_col:
-            st.markdown("""
-            <div class="subject-card postgres-card"><div class="wave"></div><div class="subject-content">
-                <div class="subject-icon">🐘</div><div class="subject-title">PostgreSQL</div>
-                <div class="subject-text">Learn SQL with PostgreSQL and<br>practice real queries.</div>
-                <div class="subject-arrow">→</div>
-            </div></div>
-            """, unsafe_allow_html=True)
-            st.markdown('<div class="subject-button subject-green">', unsafe_allow_html=True)
-            if st.button("Start Learning →", key="start_postgres", use_container_width=True):
-                st.switch_page("postgres_learning.py")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        # CONTINUE LEARNING
-        st.markdown('<div class="section-title-row"><div class="section-title">Continue Learning</div><div class="section-link">View All →</div></div>', unsafe_allow_html=True)
-        st.markdown('<div class="continue-panel">', unsafe_allow_html=True)
-
-        c1, c2, c3 = st.columns([1.55, 2.3, .62], gap="small")
-        with c1:
-            st.markdown('<div class="learning-row"><div class="learning-icon">🐍</div><div><div class="learning-name">Python Output</div><div class="learning-sub">Print Text</div></div></div>', unsafe_allow_html=True)
-        with c2:
-            st.markdown('<div style="display:flex;align-items:center;gap:8px;margin-top:20px"><div class="progress-track"><div class="progress-blue" style="width:60%"></div></div><div class="progress-value">60%</div></div>', unsafe_allow_html=True)
-        with c3:
-            st.markdown('<div class="continue-blue">', unsafe_allow_html=True)
-            if st.button("Continue", key="continue_python", use_container_width=True):
-                st.switch_page("python_learning.py")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        c1, c2, c3 = st.columns([1.55, 2.3, .62], gap="small")
-        with c1:
-            st.markdown('<div class="learning-row"><div class="learning-icon">🐘</div><div><div class="learning-name">SELECT Statement</div><div class="learning-sub">Basic Queries</div></div></div>', unsafe_allow_html=True)
-        with c2:
-            st.markdown('<div style="display:flex;align-items:center;gap:8px;margin-top:20px"><div class="progress-track"><div class="progress-green" style="width:40%"></div></div><div class="progress-value">40%</div></div>', unsafe_allow_html=True)
-        with c3:
-            st.markdown('<div class="continue-green">', unsafe_allow_html=True)
-            if st.button("Continue", key="continue_postgres", use_container_width=True):
-                st.switch_page("postgres_learning.py")
-            st.markdown('</div>', unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+    
+    # SUBJECT CARDS
+    py_col, sql_col = st.columns(2, gap="small")
+    with py_col:
+        st.markdown("""
+        <div class="subject-card python-card"><div class="wave"></div><div class="subject-content">
+            <div class="subject-icon">🐍</div><div class="subject-title">Python</div>
+            <div class="subject-text">Learn Python from basics to advanced<br>with examples and hands-on practice.</div>
+            <div class="subject-arrow">→</div>
+        </div></div>
+        """, unsafe_allow_html=True)
+        st.markdown('<div class="subject-button subject-blue">', unsafe_allow_html=True)
+        if st.button("Start Learning →", key="start_python", use_container_width=True):
+            st.switch_page("python_learning.py")
         st.markdown('</div>', unsafe_allow_html=True)
 
+    with sql_col:
+        st.markdown("""
+        <div class="subject-card postgres-card"><div class="wave"></div><div class="subject-content">
+            <div class="subject-icon">🐘</div><div class="subject-title">PostgreSQL</div>
+            <div class="subject-text">Learn SQL with PostgreSQL and<br>practice real queries.</div>
+            <div class="subject-arrow">→</div>
+        </div></div>
+        """, unsafe_allow_html=True)
+        st.markdown('<div class="subject-button subject-green">', unsafe_allow_html=True)
+        if st.button("Start Learning →", key="start_postgres", use_container_width=True):
+            st.switch_page("postgres_learning.py")
+        st.markdown('</div>', unsafe_allow_html=True)    
 
-        # ============================================================
-        # RECOMMENDED
-        # ============================================================
+
+    # CONTINUE LEARNING
+    st.markdown(
+        '<div class="section-title-row"><div class="section-title">Continue Learning</div><div class="section-link">View All →</div></div>',
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        '<div class="continue-panel">',
+        unsafe_allow_html=True,
+    ) 
+
+    # ------------------------------------------------------------
+    # GET AUTOMATIC COURSE PROGRESS
+    # ------------------------------------------------------------
+
+    import os
+    import psycopg2
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
+    connection = psycopg2.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        port=os.getenv("DB_PORT", "5433"),
+        database=os.getenv("DB_NAME", "codepractice"),
+        user=os.getenv("DB_USER", "postgres"),
+        password=os.getenv("DB_PASSWORD"),
+        connect_timeout=5,
+    )
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            l.subject,
+            COUNT(l.id) AS total_lessons,
+            COUNT(
+                CASE
+                    WHEN p.completed = TRUE THEN 1
+                END
+            ) AS completed_lessons
+        FROM lessons l
+        LEFT JOIN progress p
+            ON p.lesson_id = l.id
+            AND p.user_id = (
+                SELECT id
+                FROM users
+                WHERE email = %s
+                LIMIT 1
+            )
+        GROUP BY l.subject;
+        """,
+        ("priyanka@codepractice.local",),
+    )
+
+    course_progress = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    python_total = 0
+    python_completed = 0
+
+    postgres_total = 0
+    postgres_completed = 0
+
+    for subject, total, completed in course_progress:
+
+        if subject == "Python":
+            python_total = total
+            python_completed = completed
+
+        elif subject == "PostgreSQL":
+            postgres_total = total
+            postgres_completed = completed
+
+
+    python_percentage = (
+        round((python_completed / python_total) * 100)
+        if python_total > 0
+        else 0
+    )
+
+    postgres_percentage = (
+        round((postgres_completed / postgres_total) * 100)
+        if postgres_total > 0
+        else 0
+    )
+
+    # ------------------------------------------------------------
+    # PYTHON
+    # ------------------------------------------------------------
+
+    c1, c2, c3 = st.columns([1.55, 2.3, .62], gap="small")
+
+    with c1:
+        st.markdown(
+            '<div class="learning-row"><div class="learning-icon">🐍</div><div><div class="learning-name">Python Output</div><div class="learning-sub">Print Text</div></div></div>',
+            unsafe_allow_html=True,
+        )
+
+    with c2:
+        st.markdown(
+            f'<div style="display:flex;align-items:center;gap:8px;margin-top:20px"><div class="progress-track"><div class="progress-blue" style="width:{python_percentage}%"></div></div><div class="progress-value">{python_percentage}%</div></div>',
+            unsafe_allow_html=True,
+        )
+
+    with c3:
+        st.markdown(
+            '<div class="continue-blue">',
+            unsafe_allow_html=True,
+        )
+
+        if st.button(
+            "Continue",
+            key="continue_python",
+            use_container_width=True,
+        ):
+            st.switch_page("python_learning.py")
 
         st.markdown(
-            '<div class="section-title-row">'
-            '<div class="section-title">Recommended for You</div>'
             '</div>',
             unsafe_allow_html=True,
         )
 
-        r1, r2 = st.columns(2, gap="small")
+    # ------------------------------------------------------------
+    # POSTGRESQL
+    # ------------------------------------------------------------
 
+    c1, c2, c3 = st.columns([1.55, 2.3, .62], gap="small")
 
-        # ============================================================
-        # PYTHON RECOMMENDATION
-        # ============================================================
-
-        with r1:
-
-            st.markdown(
-                '<div class="recommend-card">'
-                '<div class="recommend-top">'
-                '<div class="recommend-icon">🐍</div>'
-                '<div>'
-                '<div class="recommend-title">Python</div>'
-                '<div class="recommend-text">'
-                'Improve Your Python Skills'
-                '</div>'
-                '</div>'
-                '</div>'
-                '<div class="recommend-bottom">'
-                '<span class="badge-blue">Beginner</span>'
-                '</div>'
-                '</div>',
-                unsafe_allow_html=True,
-            )
-
-            if st.button(
-                "Practice →",
-                key="recommended_python",
-                use_container_width=True,
-            ):
-                st.switch_page("recommended_python.py")
-
-
-        # ============================================================
-        # POSTGRESQL RECOMMENDATION
-        # ============================================================
-
-        with r2:
-
-            st.markdown(
-                '<div class="recommend-card">'
-                '<div class="recommend-top">'
-                '<div class="recommend-icon">🐘</div>'
-                '<div>'
-                '<div class="recommend-title">PostgreSQL</div>'
-                '<div class="recommend-text">'
-                'Improve Your PostgreSQL Skills'
-                '</div>'
-                '</div>'
-                '</div>'
-                '<div class="recommend-bottom">'
-                '<span class="badge-green">Beginner</span>'
-                '</div>'
-                '</div>',
-                unsafe_allow_html=True,
-            )
-
-            if st.button(
-                "Practice →",
-                key="recommended_postgres",
-                use_container_width=True,
-            ):
-                st.switch_page("recommended_postgres.py")
-
-
-    # ============================================================
-    # RIGHT COLUMN
-    # ============================================================
-
-    with right:
-
-        # PROGRESS
-        st.markdown("""
-        <div class="side-card">
-            <div class="side-title">
-                Your Progress
-            </div>
-
-            <div class="donut-wrap">
-                <div class="donut">
-                    <div class="donut-value">
-                        35%
-                    </div>
-                </div>
-            </div>
-
-            <div class="donut-caption">
-                Overall Progress
-            </div>
-
-            <div class="mini-progress">
-                <div class="mini-top">
-                    <span>🐍 &nbsp;Python</span>
-                    <span>20%</span>
-                </div>
-
-                <div class="mini-track">
-                    <div
-                        class="progress-blue"
-                        style="width:20%"
-                    ></div>
-                </div>
-            </div>
-
-            <div class="mini-progress">
-                <div class="mini-top">
-                    <span>🐘 &nbsp;PostgreSQL</span>
-                    <span>50%</span>
-                </div>
-
-                <div class="mini-track">
-                    <div
-                        class="progress-green"
-                        style="width:50%"
-                    ></div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-
-        # ========================================================
-        # LEARNING STREAK
-        # ========================================================
-
+    with c1:
         st.markdown(
-            '''
-            <div class="streak-card">
-                <div class="streak-icon">🔥</div>
-
-                <div>
-                    <div class="streak-number">5</div>
-                    <div class="streak-label">
-                        Days in a row
-                    </div>
-                </div>
-
-                <div class="streak-arrow">›</div>
-            </div>
-            ''',
+            '<div class="learning-row"><div class="learning-icon">🐘</div><div><div class="learning-name">SELECT Statement</div><div class="learning-sub">Basic Queries</div></div></div>',
             unsafe_allow_html=True,
         )
 
+    with c2:
+        st.markdown(
+            f'<div style="display:flex;align-items:center;gap:8px;margin-top:20px"><div class="progress-track"><div class="progress-green" style="width:{postgres_percentage}%"></div></div><div class="progress-value">{postgres_percentage}%</div></div>',
+            unsafe_allow_html=True,
+        )
 
-        # ========================================================
-        # QUICK LINKS
-        # ========================================================
+    with c3:
+        st.markdown(
+            '<div class="continue-green">',
+            unsafe_allow_html=True,
+        )
 
-        st.markdown("""
-        <div class="side-card">
+        if st.button(
+            "Continue",
+            key="continue_postgres",
+            use_container_width=True,
+        ):
+            st.switch_page("postgres_learning.py")
 
-            <div class="side-title">
-                Quick Links
-            </div>
+        st.markdown(
+            '</div>',
+            unsafe_allow_html=True,
+        )
 
-            <div class="quick-item">
-                <div class="quick-icon">📖</div>
-                <div>Browse All Topics</div>
-                <div class="quick-arrow">›</div>
-            </div>
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
-            <div class="quick-item">
-                <div class="quick-icon">📄</div>
-                <div>Practice Problems</div>
-                <div class="quick-arrow">›</div>
-            </div>
+    # ============================================================
+    # RECOMMENDED
+    # ============================================================
 
-            <div class="quick-item">
-                <div class="quick-icon">🔖</div>
-                <div>Saved Items</div>
-                <div class="quick-arrow">›</div>
-            </div>
+    st.markdown(
+        '<div class="section-title-row">'
+        '<div class="section-title">Recommended for You</div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
-        </div>
-        """, unsafe_allow_html=True)
+    r1, r2 = st.columns(2, gap="small")
+
+    # ============================================================
+    # PYTHON RECOMMENDATION
+    # ============================================================
+
+    with r1:
+
+        st.markdown(
+            '<div class="recommend-card">'
+            '<div class="recommend-top">'
+            '<div class="recommend-icon">🐍</div>'
+            '<div>'
+            '<div class="recommend-title">Python</div>'
+            '<div class="recommend-text">'
+            'Improve Your Python Skills'
+            '</div>'
+            '</div>'
+            '</div>'
+            '<div class="recommend-bottom">'
+            '<span class="badge-blue">Beginner</span>'
+            '</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        if st.button(
+            "Practice →",
+            key="recommended_python",
+            use_container_width=True,
+        ):
+            st.switch_page("recommended_python.py")        
+
+    # ============================================================
+    # POSTGRESQL RECOMMENDATION
+    # ============================================================
+
+    with r2:
+
+        st.markdown(
+            '<div class="recommend-card">'
+            '<div class="recommend-top">'
+            '<div class="recommend-icon">🐘</div>'
+            '<div>'
+            '<div class="recommend-title">PostgreSQL</div>'
+            '<div class="recommend-text">'
+            'Improve Your PostgreSQL Skills'
+            '</div>'
+            '</div>'
+            '</div>'
+            '<div class="recommend-bottom">'
+            '<span class="badge-green">Beginner</span>'
+            '</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        if st.button(
+            "Practice →",
+            key="recommended_postgres",
+            use_container_width=True,
+        ):
+            st.switch_page("recommended_postgres.py")        
 
 
-    # ========================================================
-    # QUICK LINKS
-    # ========================================================
+    # ============================================================
+    # FOOTER
+    # ============================================================
 
-    st.markdown("""
-        <div class="side-card">
-
-            <div class="side-title">
-                Quick Links
-            </div>
-
-            <div class="quick-item">
-                <div class="quick-icon">📖</div>
-                <div>Browse All Topics</div>
-                <div class="quick-arrow">›</div>
-            </div>
-
-            <div class="quick-item">
-                <div class="quick-icon">📄</div>
-                <div>Practice Problems</div>
-                <div class="quick-arrow">›</div>
-            </div>
-
-            <div class="quick-item">
-                <div class="quick-icon">🔖</div>
-                <div>Saved Items</div>
-                <div class="quick-arrow">›</div>
-            </div>
-
-        </div>
-    """, unsafe_allow_html=True)
-
-
-# ============================================================
-# FOOTER
-# ============================================================
-
-st.markdown(
-    '<div style="text-align:center;'
-    'color:#4d637e;'
-    'font-size:8px;'
-    'margin-top:18px;'
-    'padding-top:10px;'
-    'border-top:1px solid #12263d">'
-    'CodePractice AI • Learn. Practice. Grow.'
-    '</div>',
-    unsafe_allow_html=True,
-)
+    st.markdown(
+        '<div style="text-align:center;'
+        'color:#4d637e;'
+        'font-size:8px;'
+        'margin-top:18px;'
+        'padding-top:10px;'
+        'border-top:1px solid #12263d">'
+        'CodePractice AI • Learn. Practice. Grow.'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+    
 # ============================================================
 # NATIVE STREAMLIT NAVIGATION
 # ============================================================

@@ -166,7 +166,7 @@ section[data-testid="stSidebar"] > div:first-child{
 
 .brand-tagline{
     color:#6f87a6;
-    font-size:9px;
+    font-size:20px;
     margin-left:38px
 }
 
@@ -178,7 +178,7 @@ section[data-testid="stSidebar"] > div:first-child{
 
 .sidebar-section-title{
     color:#7189a7;
-    font-size:9px;
+    font-size:14px;
     font-weight:800;
     letter-spacing:.7px;
     text-transform:uppercase;
@@ -200,7 +200,7 @@ section[data-testid="stSidebar"] > div:first-child{
 
 .sidebar-note-text{
     color:#9bb0ca;
-    font-size:10px;
+    font-size:14px;
     line-height:1.5
 }
 
@@ -225,7 +225,7 @@ section[data-testid="stSidebar"] .stButton > button{
     background:transparent;
     color:#aabbd0;
     text-align:left;
-    font-size:12px;
+    font-size:14px;
     font-weight:500;
     padding:7px 10px;
     margin:2px 0
@@ -345,7 +345,7 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .hero-title{
     color:#f4f7fc;
-    font-size:23px;
+    font-size:25px;
     font-weight:800;
     line-height:1.2;
     margin-bottom:5px
@@ -353,12 +353,12 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .hero-subtitle{
     color:#7189a7;
-    font-size:11px
+    font-size:14px
 }
 
 .hero-quote{
     color:#879bb5;
-    font-size:11px;
+    font-size:14px;
     font-weight:500;
     padding-bottom:3px
 }
@@ -383,7 +383,7 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .section-link{
     color:#3196ff;
-    font-size:10px;
+    font-size:14px;
     font-weight:600
 }
 
@@ -451,13 +451,13 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .subject-title{
     color:#f3f7ff;
-    font-size:16px;
+    font-size:25px;
     font-weight:800
 }
 
 .subject-text{
     color:#a2b4ca;
-    font-size:9px;
+    font-size:14px;
     line-height:1.45;
     max-width:270px;
     margin-top:5px
@@ -546,13 +546,13 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .learning-name{
     color:#edf3fb;
-    font-size:10px;
+    font-size:14px;
     font-weight:700
 }
 
 .learning-sub{
     color:#7289a5;
-    font-size:8px;
+    font-size:14px;
     margin-top:2px
 }
 
@@ -565,7 +565,7 @@ section[data-testid="stSidebar"] .stButton > button:hover{
     flex:1;
     height:5px;
     background:#1c3046;
-    border-radius:10px;
+    border-radius:14px;
     overflow:hidden
 }
 
@@ -583,7 +583,7 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .progress-value{
     color:#8ea3bd;
-    font-size:9px;
+    font-size:14px;
     width:30px;
     text-align:right
 }
@@ -804,13 +804,13 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .recommend-title{
     color:#edf3fa;
-    font-size:10px;
+    font-size:14px;
     font-weight:800
 }
 
 .recommend-text{
     color:#7e94ad;
-    font-size:8px;
+    font-size:14px;
     line-height:1.4;
     margin-top:4px
 }
@@ -826,7 +826,7 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 .badge-green{
     border-radius:20px;
     padding:3px 8px;
-    font-size:7px
+    font-size:14px
 }
 
 .badge-blue{
@@ -841,7 +841,7 @@ section[data-testid="stSidebar"] .stButton > button:hover{
 
 .start-link{
     color:#3d9aff;
-    font-size:9px;
+    font-size:14px;
     font-weight:700
 }
 
@@ -959,7 +959,7 @@ def render_dashboard():
         '<div class="continue-panel">',
         unsafe_allow_html=True,
     ) 
-
+    
     # ------------------------------------------------------------
     # GET AUTOMATIC COURSE PROGRESS
     # ------------------------------------------------------------
@@ -982,59 +982,55 @@ def render_dashboard():
     cursor = connection.cursor()
 
     cursor.execute(
-        """
-        SELECT
-            l.subject,
-            COUNT(l.id) AS total_lessons,
-            COUNT(
-                CASE
-                    WHEN p.completed = TRUE THEN 1
-                END
-            ) AS completed_lessons
-        FROM lessons l
-        LEFT JOIN progress p
-            ON p.lesson_id = l.id
-            AND p.user_id = (
-                SELECT id
-                FROM users
-                WHERE email = %s
-                LIMIT 1
-            )
-        GROUP BY l.subject;
-        """,
-        ("priyanka@codepractice.local",),
-    )
-
+    """
+    SELECT
+        l.subject,
+        COUNT(l.id) AS total_lessons,
+        COUNT(p.id) AS started_lessons
+    FROM lessons l
+    LEFT JOIN progress p
+        ON p.lesson_id = l.id
+        AND p.user_id = (
+            SELECT id
+            FROM users
+            WHERE email = %s
+            LIMIT 1
+        )
+    GROUP BY l.subject;
+    """,
+    ("priyanka@codepractice.local",),
+)
+    
     course_progress = cursor.fetchall()
 
     cursor.close()
     connection.close()
 
     python_total = 0
-    python_completed = 0
+    python_started = 0
 
     postgres_total = 0
-    postgres_completed = 0
+    postgres_started = 0
 
-    for subject, total, completed in course_progress:
+    for subject, total, started in course_progress:
 
         if subject == "Python":
             python_total = total
-            python_completed = completed
+            python_started = started
 
         elif subject == "PostgreSQL":
             postgres_total = total
-            postgres_completed = completed
+            postgres_started = started
 
 
     python_percentage = (
-        round((python_completed / python_total) * 100)
+        round((python_started / python_total) * 100)
         if python_total > 0
         else 0
     )
 
     postgres_percentage = (
-        round((postgres_completed / postgres_total) * 100)
+        round((postgres_started / postgres_total) * 100)
         if postgres_total > 0
         else 0
     )
@@ -1047,7 +1043,7 @@ def render_dashboard():
 
     with c1:
         st.markdown(
-            '<div class="learning-row"><div class="learning-icon">🐍</div><div><div class="learning-name">Python Output</div><div class="learning-sub">Print Text</div></div></div>',
+            '<div class="learning-row"><div class="learning-icon">🐍</div><div><div class="learning-name">Python</div><div class="learning-sub">Master Python Fundamentals</div></div></div>',
             unsafe_allow_html=True,
         )
 
@@ -1083,7 +1079,7 @@ def render_dashboard():
 
     with c1:
         st.markdown(
-            '<div class="learning-row"><div class="learning-icon">🐘</div><div><div class="learning-name">SELECT Statement</div><div class="learning-sub">Basic Queries</div></div></div>',
+            '<div class="learning-row"><div class="learning-icon">🐘</div><div><div class="learning-name">PostgreSQL</div><div class="learning-sub">Master PostgreSQL Fundamentals</div></div></div>',
             unsafe_allow_html=True,
         )
 
@@ -1199,7 +1195,7 @@ def render_dashboard():
     st.markdown(
         '<div style="text-align:center;'
         'color:#4d637e;'
-        'font-size:8px;'
+        'font-size:14px;'
         'margin-top:18px;'
         'padding-top:10px;'
         'border-top:1px solid #12263d">'

@@ -1,6 +1,7 @@
 from pathlib import Path
 import streamlit as st
 
+
 # ============================================================
 # CONFIGURATION
 # ============================================================
@@ -958,81 +959,95 @@ def render_dashboard():
         '<div class="continue-panel">',
         unsafe_allow_html=True,
     ) 
-    
-    # ------------------------------------------------------------
+        # ------------------------------------------------------------
     # GET AUTOMATIC COURSE PROGRESS
     # ------------------------------------------------------------
-
     import os
     import psycopg2
     from dotenv import load_dotenv
+    from pathlib import Path
 
-    load_dotenv()
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    load_dotenv(BASE_DIR / ".env")
 
-    connection = psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        port=os.getenv("DB_PORT", "5433"),
-        database=os.getenv("DB_NAME", "codepractice"),
-        user=os.getenv("DB_USER", "postgres"),
-        password=os.getenv("DB_PASSWORD"),
-        connect_timeout=5,
-    )
+    def get_db_setting(key, default=None):
+        try:
+            value = st.secrets.get(key)
+            if value:
+                return value
+        except Exception:
+            pass
+        return os.getenv(key, default)
 
-    cursor = connection.cursor()
+    connection = None
+    cursor = None
 
-    cursor.execute(
-    """
-    SELECT
-        l.subject,
-        COUNT(l.id) AS total_lessons,
-        COUNT(p.id) AS started_lessons
-    FROM lessons l
-    LEFT JOIN progress p
-        ON p.lesson_id = l.id
-        AND p.user_id = (
-            SELECT id
-            FROM users
-            WHERE email = %s
-            LIMIT 1
+    try:
+        connection = psycopg2.connect(
+            host=get_db_setting("DB_HOST"),
+            port=int(get_db_setting("DB_PORT", "5432")),
+            database=get_db_setting("DB_NAME"),
+            user=get_db_setting("DB_USER"),
+            password=get_db_setting("DB_PASSWORD"),
+             sslmode=get_db_setting("DB_SSLMODE", "require"),
+            connect_timeout=10,
         )
-    GROUP BY l.subject;
-    """,
-    ("priyanka@codepractice.local",),
-)
-    
-    course_progress = cursor.fetchall()
 
-    cursor.close()
-    connection.close()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT
+                l.subject,
+                COUNT(DISTINCT l.id) AS total_lessons,
+                COUNT(DISTINCT l.id) FILTER (
+                    WHERE COALESCE(p.completed, FALSE) = TRUE
+                ) AS completed_lessons
+            FROM public.lessons AS l
+            LEFT JOIN public.progress AS p
+                ON p.lesson_id = l.id
+                AND p.user_id = (
+                    SELECT id
+                    FROM public.users
+                    WHERE email = %s
+                    LIMIT 1
+                )
+            GROUP BY l.subject;
+            """,
+            ("priyanka@codepractice.local",),
+        )
+
+        course_progress = cursor.fetchall()
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
 
     python_total = 0
     python_started = 0
-
     postgres_total = 0
     postgres_started = 0
 
-    for subject, total, started in course_progress:
-
+    for subject, total, completed in course_progress:
         if subject == "Python":
             python_total = total
-            python_started = started
-
+            python_started = completed
         elif subject == "PostgreSQL":
             postgres_total = total
-            postgres_started = started
-
+            postgres_started = completed
 
     python_percentage = (
-        round((python_started / python_total) * 100)
-        if python_total > 0
-        else 0
+        round(python_started / python_total * 100)
+        if python_total > 0 else 0
     )
 
     postgres_percentage = (
-        round((postgres_started / postgres_total) * 100)
-        if postgres_total > 0
-        else 0
+        round(postgres_started / postgres_total * 100)
+        if postgres_total > 0 else 0
     )
+    
 
     # ------------------------------------------------------------
     # PYTHON

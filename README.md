@@ -34,3 +34,15 @@ CodePractice AI is an interactive learning platform built with Streamlit that he
 - 🌐 HTML/CSS
 - 🔧 Git & GitHub
 - 💻 VS Code
+
+💻 Local App
+
+http://localhost:8506/
+
+🌐 Live Deployment
+
+https://codepracticeai-nyrcod9gtmfdwwtebrwkou.streamlit.app/
+
+▶️ Run Locally
+
+streamlit run dashboard/app.py
